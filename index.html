@@ -9,7 +9,8 @@
   </head>
     
   <body>
-  <html lang="tr">
+  <!DOCTYPE html>
+<html lang="tr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -25,7 +26,27 @@
     #result { margin-top:18px; font-size:1.1rem; font-weight:600; color:#1d3557; min-height:56px; display:flex; align-items:center; justify-content:center; }
     .controls { display:flex; gap:10px; margin-top:14px; }
     .hidden { display:none; }
-    @media (max-width:480px){ body{padding:20px} .card{padding:16px} }
+
+    /* Admin panel */
+    #adminPanel {
+      margin-top: 30px;
+      padding: 18px;
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      display: none;
+    }
+    #adminPanel h2 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-size: 20px;
+      color:#333;
+    }
+    #adminPanel .item {
+      padding: 6px 0;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+    }
   </style>
 </head>
 <body>
@@ -33,10 +54,9 @@
     <h1>Yılbaşı Çekilişi</h1>
     <p class="small">İsmini seç, sonra sonucu onayla. Yanlış seçtiysen <strong>Geri Dön</strong> ile tekrar seçebilirsin. Sonucu bir kez gösterdikten sonra aynı cihazda başka isim seçilemez.</p>
 
-    <!-- Selection area -->
     <div id="selectArea">
       <label for="userSelect" class="small" style="display:block;text-align:left;margin-bottom:8px">İsmini seç</label>
-      <select id="userSelect" aria-label="İsminizi seçin">
+      <select id="userSelect">
         <option value="">-- İsmini seç --</option>
         <option>Damla</option>
         <option>Barış</option>
@@ -59,143 +79,28 @@
         <option>Fatih</option>
       </select>
       <div style="height:12px"></div>
-      <button id="confirmBtn" class="primary" aria-controls="confirmArea">Seçimi Onayla</button>
+      <button id="confirmBtn" class="primary">Seçimi Onayla</button>
     </div>
 
-    <!-- Confirm area -->
-    <div id="confirmArea" class="hidden" aria-hidden="true">
+    <div id="confirmArea" class="hidden">
       <p class="small">Seçimin:</p>
       <div id="chosenName" style="font-size:1.25rem;font-weight:700;margin-top:8px;"></div>
 
-      <div class="controls" style="margin-top:16px">
+      <div class="controls">
         <button id="backBtn" class="ghost">Geri Dön</button>
         <button id="revealBtn" class="primary">Sonucu Göster</button>
       </div>
     </div>
 
-    <!-- Result -->
-    <div id="result" aria-atomic="true"></div>
+    <div id="result"></div>
 
-    <!-- Admin -->
-    <div id="admin" style="margin-top:14px">
-      <button id="resetBtn" class="ghost">(Admin) Tüm Eşleşmeleri Sıfırla</button>
+    <!-- GİZLİ ADMIN PANELİ -->
+    <div id="adminPanel">
+      <h2>Tüm Sonuçlar</h2>
+      <div id="adminList"></div>
     </div>
-  </div>
 
-<script>
-(function(){
-  const NAMES = [
-    "Damla","Barış","Burak Kasırga","Burak Taygan","Büşra","Hakan","Semih",
-    "Okan","Doğan","Şeyda","Fuat","Rüstem","Özge","Gizem","Erkan",
-    "Neşe","Başak","Umut","Fatih"
-  ];
-
-  const USED_KEY = 'yilbasi_usedMatches_v1';
-  const LOCK_KEY = 'yilbasi_lockedUser_v1';
-
-  const userSelect = document.getElementById('userSelect');
-  const confirmBtn = document.getElementById('confirmBtn');
-  const confirmArea = document.getElementById('confirmArea');
-  const selectArea = document.getElementById('selectArea');
-  const chosenName = document.getElementById('chosenName');
-  const backBtn = document.getElementById('backBtn');
-  const revealBtn = document.getElementById('revealBtn');
-  const resultDiv = document.getElementById('result');
-  const resetBtn = document.getElementById('resetBtn');
-
-  let used = JSON.parse(localStorage.getItem(USED_KEY) || '{}');
-  let lockedUser = localStorage.getItem(LOCK_KEY) || null;
-
-  function enforceLockIfNeeded() {
-    if (lockedUser) {
-      selectArea.classList.add('hidden');
-      confirmArea.classList.add('hidden');
-      resultDiv.innerHTML = `Bu cihazda sonuç daha önce <strong>${lockedUser}</strong> için oluşturuldu.`;
-    }
-  }
-  enforceLockIfNeeded();
-
-  confirmBtn.addEventListener('click', ()=>{
-    const user = userSelect.value;
-    if (!user) { resultDiv.innerHTML = 'Lütfen önce bir isim seçin.'; return; }
-    if (lockedUser && lockedUser !== user) {
-      resultDiv.innerHTML = `Bu cihazda sonuç daha önce <strong>${lockedUser}</strong> için oluşturuldu.`; return;
-    }
-    chosenName.textContent = user;
-    selectArea.classList.add('hidden');
-    confirmArea.classList.remove('hidden');
-    resultDiv.innerHTML = '';
-  });
-
-  backBtn.addEventListener('click', ()=>{
-    if (lockedUser) { resultDiv.innerHTML = `Bu cihazda sonuç daha önce <strong>${lockedUser}</strong> için oluşturuldu.`; return; }
-    userSelect.value = '';
-    confirmArea.classList.add('hidden');
-    selectArea.classList.remove('hidden');
-    resultDiv.innerHTML = '';
-  });
-
-  revealBtn.addEventListener('click', ()=>{
-    const user = chosenName.textContent;
-    if (!user) { resultDiv.innerHTML = 'Hata: isim bulunamadı.'; return; }
-
-    if (used[user]) {
-      localStorage.setItem(LOCK_KEY,user);
-      lockedUser = user;
-      resultDiv.innerHTML = `Sonucun daha önce oluşturulmuş:<br><br>🎁 ${used[user]} 🎁`;
-      selectArea.classList.add('hidden');
-      confirmArea.classList.add('hidden');
-      return;
-    }
-
-    const taken = Object.values(used);
-    const available = NAMES.filter(n => n !== user && !taken.includes(n));
-
-    if (available.length === 0) {
-      resultDiv.innerHTML = 'Eşleşme kalmadı.';
-      return;
-    }
-
-    const selected = available[Math.floor(Math.random()*available.length)];
-    used[user] = selected;
-    localStorage.setItem(USED_KEY, JSON.stringify(used));
-
-    localStorage.setItem(LOCK_KEY, user);
-    lockedUser = user;
-
-    resultDiv.innerHTML = `Bu yıl hediye alacağın kişi:<br><br>🎁 ${selected} 🎁`;
-    selectArea.classList.add('hidden');
-    confirmArea.classList.add('hidden');
-  });
-
-  /* --------------- ŞİFRELİ RESET ---------------- */
-  resetBtn.addEventListener('click', ()=>{
-    const pwd = prompt("Sıfırlama için şifreyi girin:");
-
-    const ADMIN_PASSWORD = "258963"; // ← Şifre burada
-
-    if (pwd === null) return;
-    if (pwd !== ADMIN_PASSWORD) {
-      alert("Hatalı şifre.");
-      return;
-    }
-
-    if (!confirm('Tüm eşleşmeleri sıfırlamak istediğine emin misin?')) return;
-
-    localStorage.removeItem(USED_KEY);
-    localStorage.removeItem(LOCK_KEY);
-    used = {};
-    lockedUser = null;
-    userSelect.value = '';
-    selectArea.classList.remove('hidden');
-    confirmArea.classList.add('hidden');
-    resultDiv.innerHTML = 'Tüm eşleşmeler sıfırlandı.';
-  });
-
-})();
-</script>
-</body>
-</html>
+  </div
     
   </body>
   
