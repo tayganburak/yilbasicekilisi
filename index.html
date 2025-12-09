@@ -3,7 +3,7 @@
 
   <head>
     <meta charset="UTF-8">
-    <title>CodePen - A Pen by taygan</title>
+    <title>Untitled</title>
     
 
   </head>
@@ -16,281 +16,117 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Yılbaşı Çekilişi</title>
   <style>
-    body { font-family: Arial, sans-serif; background:#f2f2f2; margin:0; padding:40px; display:flex; justify-content:center; }
-    .card { background:white; width:100%; max-width:520px; padding:22px; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,0.08); text-align:center; }
-    h1 { color:#d62828; margin:0 0 8px 0; }
-    p.small { color:#555; font-size:0.95rem; margin:0 0 12px 0; }
-    select, button { width:100%; padding:12px 14px; font-size:16px; border-radius:8px; border:1px solid #ddd; box-sizing:border-box; }
-    button.primary { background:#40916c; color:#fff; border:none; cursor:pointer; }
-    button.ghost { background:transparent; border:1px solid #ccc; cursor:pointer; }
-    #result { margin-top:18px; font-size:1.1rem; font-weight:600; color:#1d3557; min-height:56px; display:flex; align-items:center; justify-content:center; }
-    .controls { display:flex; gap:10px; margin-top:14px; }
-    .hidden { display:none; }
-    #adminBtn { margin-top:14px; background:#fff; border:1px solid #bbb; padding:10px; border-radius:8px; cursor:pointer; }
-    /* Admin panel */
-    #adminPanel {
-      margin-top: 20px;
-      padding: 14px;
-      border-radius: 10px;
-      background: #fff;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-      display: none;
-      text-align:left;
-    }
-    #adminPanel h2 { margin:0 0 10px 0; font-size:18px; color:#333; }
-    .item { padding:8px 6px; border-bottom:1px solid #f0f0f0; }
-    .admin-controls { display:flex; gap:8px; margin-top:10px; }
-    @media (max-width:480px){ body{padding:20px} .card{padding:16px} }
+    body { font-family: Arial; background:#f2f2f2; display:flex; justify-content:center; padding:40px;}
+    .box { background:white; padding:20px; border-radius:12px; width:360px; text-align:center; box-shadow:0 0 10px rgba(0,0,0,.1);}
+    button { padding:10px 18px; border:none; border-radius:10px; background:#40916c; color:white; cursor:pointer;}
+    #result { margin-top:20px; font-size:1.2rem; font-weight:bold; }
+    select { width:100%; padding:10px; border-radius:8px; border:1px solid #ccc; }
   </style>
 </head>
 <body>
-  <div class="card" role="main" aria-live="polite">
-    <h1>Yılbaşı Çekilişi</h1>
-    <p class="small">İsmini seçip onayla. Sonucu görüntüle. </p>
 
-    <!-- Selection area -->
-    <div id="selectArea">
-      <label for="userSelect" class="small" style="display:block;text-align:left;margin-bottom:8px">İsmini seç</label>
-      <select id="userSelect" aria-label="İsminizi seçin">
-        <option value="">-- İsmini seç --</option>
-        <option>Damla Aksu</option>
-        <option>Barış Özatav</option>
-        <option>Burak Kasırga</option>
-        <option>Burak Taygan</option>
-        <option>Büşra Tuğmen</option>
-        <option>Hakan Çırpanlı</option>
-        <option>Semih Acar</option>
-        <option>Okan Doğan</option>
-        <option>Doğan Koç</option>
-        <option>Şeyda Gencer</option>
-        <option>Fuatcan Göral</option>
-        <option>Rüstem Öztürk</option>
-        <option>Özge Çamdeviren</option>
-        <option>Gizem Demirer</option>
-        <option>Erkan Çam</option>
-        <option>Neşe Tek</option>
-        <option>Başak Narsap</option>
-        <option>Umut Yalçınkaya</option>
-        <option>Fatih Duman</option>
-      </select>
-      <div style="height:12px"></div>
-      <button id="confirmBtn" class="primary" aria-controls="confirmArea">Seçimi Onayla</button>
-    </div>
+<div class="box">
+<h2>Yılbaşı Çekilişi</h2>
+<p>İsmini seç ve eşleşmeni gör</p>
 
-    <!-- Confirm area -->
-    <div id="confirmArea" class="hidden" aria-hidden="true">
-      <p class="small">Seçimin:</p>
-      <div id="chosenName" style="font-size:1.25rem;font-weight:700;margin-top:8px;"></div>
+<select id="nameSelect">
+  <option value="">İsmini seç</option>
+  <option>Damla Aksu</option>
+  <option>Barış Özatav</option>
+  <option>Burak Kasırga</option>
+  <option>Burak Taygan</option>
+  <option>Büşra Tuğmen</option>
+  <option>Hakan Çırpanlı</option>
+  <option>Semih Acar</option>
+  <option>Okan Doğan</option>
+  <option>Doğan Koç</option>
+  <option>Şeyda Gencer</option>
+  <option>Fuatcan Göral</option>
+  <option>Rüstem Öztürk</option>
+  <option>Özge Çamdeviren</option>
+  <option>Gizem Demirer</option>
+  <option>Erkan Çam</option>
+  <option>Neşe Tek</option>
+  <option>Başak Narsap</option>
+  <option>Umut Yalçınkaya</option>
+  <option>Fatih Duman</option>
+</select>
 
-      <div class="controls" style="margin-top:12px">
-        <button id="backBtn" class="ghost">Geri Dön</button>
-        <button id="revealBtn" class="primary">Sonucu Göster</button>
-      </div>
-    </div>
+<br/><br/>
+<button onclick="showResult()">Sonucu Göster</button>
 
-    <!-- Result -->
-    <div id="result" aria-atomic="true"></div>
-
-    <!-- Admin button (görünür) -->
-    <button id="adminBtn" aria-haspopup="true">Admin</button>
-
-    <!-- Admin panel (şifrelenmiş açılır) -->
-    <div id="adminPanel" role="region" aria-hidden="true">
-      <h2>Tüm Eşleşmeler</h2>
-      <div id="adminList"></div>
-      <div class="admin-controls">
-        <button id="resetAdminBtn" class="ghost">Sıfırla</button>
-        <button id="closeAdminBtn" class="ghost">Kapat</button>
-      </div>
-    </div>
-  </div>
+<div id="result"></div>
+</div>
 
 <script>
-(function(){
-  // İsim listesi (kaynak dosyana uygun şekilde)
-  const NAMES = [
-    "Damla","Barış","Burak Kasırga","Burak Taygan","Büşra","Hakan","Semih",
-    "Okan","Doğan","Şeyda","Fuat","Rüstem","Özge","Gizem","Erkan",
-    "Neşe","Başak","Umut","Fatih"
-  ];
+const NAMES = [
+  "Damla","Barış","Burak Kasırga","Burak Taygan","Büşra","Hakan","Semih","Okan",
+  "Doğan","Şeyda","Fuat","Rüstem","Özge","Gizem","Erkan","Neşe","Başak"
+];
 
-  // LocalStorage anahtarları
-  const USED_KEY = 'yilbasi_usedMatches_v1';
-  const LOCK_KEY = 'yilbasi_lockedUser_v1';
+// Derangement fonksiyonu: kimse kendine çıkmaz, herkes 1-1 eşleşir
+function createDerangement(list) {
+  let arr = [...list];
+  let d = [...list];
 
-  // Admin şifresi
-  const ADMIN_PASSWORD = "258963";
+  // Shuffle
+  for (let i = d.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [d[i], d[j]] = [d[j], d[i]];
+  }
 
-  // DOM elemanları
-  const userSelect = document.getElementById('userSelect');
-  const confirmBtn = document.getElementById('confirmBtn');
-  const confirmArea = document.getElementById('confirmArea');
-  const selectArea = document.getElementById('selectArea');
-  const chosenName = document.getElementById('chosenName');
-  const backBtn = document.getElementById('backBtn');
-  const revealBtn = document.getElementById('revealBtn');
-  const resultDiv = document.getElementById('result');
-
-  const adminBtn = document.getElementById('adminBtn');
-  const adminPanel = document.getElementById('adminPanel');
-  const adminList = document.getElementById('adminList');
-  const resetAdminBtn = document.getElementById('resetAdminBtn');
-  const closeAdminBtn = document.getElementById('closeAdminBtn');
-
-  // Durum verileri
-  let used = JSON.parse(localStorage.getItem(USED_KEY) || '{}');
-  let lockedUser = localStorage.getItem(LOCK_KEY) || null;
-  let adminAuth = false; // sayfa oturumu boyunca admin doğrulaması
-
-  // Admin paneli güncelle
-  function updateAdminPanel(){
-    adminList.innerHTML = "";
-    const entries = Object.entries(used);
-    if (entries.length === 0){
-      const p = document.createElement('div');
-      p.className = "item";
-      p.textContent = "Henüz eşleşme yok.";
-      adminList.appendChild(p);
-      return;
-    }
-    // alfabetik sırayla göster (isteğe bağlı)
-    entries.sort((a,b)=> a[0].localeCompare(b[0],'tr'));
-    for (const [giver, receiver] of entries){
-      const div = document.createElement("div");
-      div.className = "item";
-      div.textContent = `${giver} → ${receiver}`;
-      adminList.appendChild(div);
+  // Eğer biri kendine çıkarsa yeniden üret
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] === d[i]) {
+      return createDerangement(list);
     }
   }
 
-  // Cihaz kilidini uygula (eğer varsa)
-  function enforceLockIfNeeded(){
-    if (lockedUser){
-      selectArea.classList.add('hidden');
-      confirmArea.classList.add('hidden');
-      resultDiv.innerHTML = `Bu cihazda sonuç daha önce <strong>${lockedUser}</strong> için oluşturuldu.`;
-    } else {
-      // Seçim ekranını görünür kıl
-      selectArea.classList.remove('hidden');
-      resultDiv.innerHTML = '';
-    }
+  // Eşleşme tablosu oluştur
+  let map = {};
+  for (let i = 0; i < arr.length; i++) {
+    map[arr[i]] = d[i];
   }
-  enforceLockIfNeeded();
-  updateAdminPanel();
+  return map;
+}
 
-  // Seçimi onayla
-  confirmBtn.addEventListener('click', ()=>{
-    const user = userSelect.value;
-    if (!user) { resultDiv.innerHTML = 'Lütfen önce bir isim seçin.'; return; }
-    if (lockedUser && lockedUser !== user) {
-      resultDiv.innerHTML = `Bu cihazda sonuç daha önce <strong>${lockedUser}</strong> için oluşturuldu.`; return;
-    }
-    chosenName.textContent = user;
-    selectArea.classList.add('hidden');
-    confirmArea.classList.remove('hidden');
-    resultDiv.innerHTML = '';
-  });
+// Eşleşme tablosu daha önce oluşturulmamışsa oluştur
+if (!localStorage.getItem("MATCH_TABLE")) {
+  const table = createDerangement(NAMES);
+  localStorage.setItem("MATCH_TABLE", JSON.stringify(table));
+}
 
-  // Geri dön
-  backBtn.addEventListener('click', ()=>{
-    if (lockedUser) { resultDiv.innerHTML = `Bu cihazda sonuç daha önce <strong>${lockedUser}</strong> için oluşturuldu.`; return; }
-    userSelect.value = '';
-    confirmArea.classList.add('hidden');
-    selectArea.classList.remove('hidden');
-    resultDiv.innerHTML = '';
-  });
+let lockedUser = localStorage.getItem("LOCKED_USER") || null;
+const table = JSON.parse(localStorage.getItem("MATCH_TABLE"));
 
-  // Sonucu göster
-  revealBtn.addEventListener('click', ()=>{
-    const user = chosenName.textContent;
-    if (!user) { resultDiv.innerHTML = 'Hata: isim bulunamadı.'; return; }
+// Sonucu Göster
+function showResult() {
+  const user = document.getElementById("nameSelect").value;
+  const resultDiv = document.getElementById("result");
 
-    // Eğer daha önce atanmışsa sadece göster ve kilitle
-    if (used[user]) {
-      localStorage.setItem(LOCK_KEY, user);
-      lockedUser = user;
-      resultDiv.innerHTML = `Sonucun daha önce oluşturulmuş:<br><br>🎁 ${used[user]} 🎁`;
-      selectArea.classList.add('hidden');
-      confirmArea.classList.add('hidden');
-      updateAdminPanel();
-      return;
-    }
+  if (!user) {
+    resultDiv.innerHTML = "Lütfen ismini seç.";
+    return;
+  }
 
-    // Müsait olanlar: kendisi hariç ve daha önce çıkmamışlar
-    const taken = Object.values(used);
-    const available = NAMES.filter(n => n !== user && !taken.includes(n));
-    if (available.length === 0) {
-      resultDiv.innerHTML = 'Eşleşme kalmadı.';
-      return;
-    }
+  // Cihaz başka kullanıcıya kilitlendiyse
+  if (lockedUser && lockedUser !== user) {
+    resultDiv.innerHTML =
+      "Bu cihaz daha önce <b>" + lockedUser + "</b> için kilitlenmiş.";
+    return;
+  }
 
-    const selected = available[Math.floor(Math.random()*available.length)];
-    used[user] = selected;
-    localStorage.setItem(USED_KEY, JSON.stringify(used));
+  lockedUser = user;
+  localStorage.setItem("LOCKED_USER", user);
 
-    // Kilitle cihazı bu kullanıcı için
-    localStorage.setItem(LOCK_KEY, user);
-    lockedUser = user;
+  const match = table[user];
 
-    resultDiv.innerHTML = `Bu yıl hediye alacağın kişi:<br><br>🎁 ${selected} 🎁`;
-    selectArea.classList.add('hidden');
-    confirmArea.classList.add('hidden');
+  resultDiv.innerHTML =
+    "Bu yıl hediye vereceğin kişi:<br><br> 🎁 <b>" + match + "</b> 🎁";
+}
 
-    updateAdminPanel();
-  });
-
-  // Admin butonuna tıkla -> şifre sor
-  adminBtn.addEventListener('click', ()=>{
-    const pwd = prompt("Admin şifresi:");
-    if (pwd === null) return;
-    if (pwd === ADMIN_PASSWORD){
-      adminAuth = true;
-      adminPanel.style.display = "block";
-      adminPanel.setAttribute('aria-hidden','false');
-      updateAdminPanel();
-      // scroll admin panel'e
-      adminPanel.scrollIntoView({behavior:'smooth'});
-    } else {
-      alert("Hatalı şifre.");
-    }
-  });
-
-  // Admin panel kapat
-  closeAdminBtn.addEventListener('click', ()=>{
-    adminPanel.style.display = "none";
-    adminPanel.setAttribute('aria-hidden','true');
-    adminAuth = false;
-  });
-
-  // Sıfırlama (admin yetkisi gerektirir)
-  resetAdminBtn.addEventListener('click', ()=>{
-    // ek güvenlik: tekrar şifre iste
-    const pwd = prompt("Sıfırlama için şifreyi tekrar girin:");
-    if (pwd === null) return;
-    if (pwd !== ADMIN_PASSWORD){
-      alert("Hatalı şifre. Sıfırlama iptal edildi.");
-      return;
-    }
-    if (!confirm("Tüm eşleşmeleri tamamen sıfırlamak istediğine emin misin?")) return;
-    localStorage.removeItem(USED_KEY);
-    localStorage.removeItem(LOCK_KEY);
-    used = {};
-    lockedUser = null;
-    adminAuth = false;
-    adminPanel.style.display = "none";
-    adminPanel.setAttribute('aria-hidden','true');
-    userSelect.value = '';
-    selectArea.classList.remove('hidden');
-    confirmArea.classList.add('hidden');
-    resultDiv.innerHTML = 'Tüm eşleşmeler sıfırlandı.';
-    updateAdminPanel();
-  });
-
-  // Accessibility: Enter ile seçim onayı (select içindeyken)
-  userSelect.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ confirmBtn.click(); } });
-
-})();
 </script>
+
 </body>
 </html>
     
