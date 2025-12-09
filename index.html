@@ -67,7 +67,7 @@
     apiKey: "AIzaSyCwhEDuHLFEqKXS0Nt2DOTxLpiqomDV3ZA",
     authDomain: "yilbasison.firebaseapp.com",
     projectId: "yilbasison",
-    storageBucket: "yilbasison.appspot.com", // düzeltildi
+    storageBucket: "yilbasison.appspot.com",
     messagingSenderId: "548976271380",
     appId: "1:548976271380:web:815f2afc62dc9ae7b6c701",
     measurementId: "G-N8D8V7N1K8"
@@ -119,17 +119,18 @@
 
     const match = MATCH_TABLE[user];
 
+    // Firestore kaydı dene ama hata olsa bile sonucu göster
     try {
       await setDoc(doc(db, "cekilis_sonuclari", user), {
         isim: user,
         hediyeVerdigi: match,
         zaman: Date.now()
       });
-      result.innerHTML = `Bu yıl hediye vereceğin kişi:<br><br>🎁 <b>${match}</b> 🎁`;
     } catch (e) {
       console.error("Firestore kaydı başarısız:", e);
-      result.innerHTML = "Sonuç gösterilemedi. Konsolu kontrol et.";
     }
+
+    result.innerHTML = `Sonucu gösterildi:<br><br>🎁 <b>${match}</b> 🎁`;
   }
 
   function adminReset() {
