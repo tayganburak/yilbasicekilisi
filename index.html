@@ -23,13 +23,12 @@
     select { width:100%; padding:10px; border-radius:8px; border:1px solid #ccc; }
   </style>
 
-  <!-- Firebase -->
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-
 </head>
-<body>
 
+<body>
 <div class="box">
   <h2>Yılbaşı Çekilişi</h2>
   <p>İsmini seç ve eşleşmeni gör.</p>
@@ -58,17 +57,17 @@
   </select>
 
   <br><br>
-  <button onclick="showResult()">Sonucu Göster</button>
+  <button id="showResultBtn">Sonucu Göster</button>
 
   <div id="result"></div>
 
-  <button class="adminBtn" onclick="adminReset()">Admin: Eşleşmeleri Sıfırla</button>
+  <button id="adminBtn" class="adminBtn">Admin: Eşleşmeleri Sıfırla</button>
 </div>
 
 
 <script>
 // --------------------------------------------------------
-// 1) FIREBASE CONFIG - BURAYA SENİN BİLGİLERİN GELECEK
+// Firebase Config (BURAYI SEN DOLDURACAKSIN)
 // --------------------------------------------------------
 const firebaseConfig = {
   apiKey: "",
@@ -79,100 +78,7 @@ const firebaseConfig = {
   appId: ""
 };
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-
-// --------------------------------------------------------
-// 2) İSİMLER
-// --------------------------------------------------------
-const NAMES = [
-  "Damla","Barış","Burak Kasırga","Burak Taygan","Büşra","Hakan","Semih","Okan",
-  "Doğan","Şeyda","Fuat","Rüstem","Özge","Gizem","Erkan","Neşe","Başak"
-];
-
-
-// --------------------------------------------------------
-// 3) DERANGEMENT
-// --------------------------------------------------------
-function createDerangement(list) {
-  let arr = [...list];
-  let shuffled = [...list];
-
-  do {
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-  } while (arr.some((v, i) => v === shuffled[i]));
-
-  let map = {};
-  arr.forEach((name, i) => map[name] = shuffled[i]);
-  return map;
-}
-
-if (!localStorage.getItem("MATCH_TABLE")) {
-  localStorage.setItem("MATCH_TABLE", JSON.stringify(createDerangement(NAMES)));
-}
-
-let MATCH_TABLE = JSON.parse(localStorage.getItem("MATCH_TABLE"));
-let lockedUser = localStorage.getItem("LOCKED_USER");
-
-
-// --------------------------------------------------------
-// 4) SONUCU GÖSTER
-// --------------------------------------------------------
-function showResult() {
-  const user = document.getElementById("nameSelect").value;
-  const result = document.getElementById("result");
-
-  if (!user) {
-    result.innerHTML = "Lütfen ismini seç.";
-    return;
-  }
-
-  if (lockedUser && lockedUser !== user) {
-    result.innerHTML = `Bu cihaz daha önce <b>${lockedUser}</b> için kullanıldı.`;
-    return;
-  }
-
-  lockedUser = user;
-  localStorage.setItem("LOCKED_USER", user);
-
-  const match = MATCH_TABLE[user];
-
-  // Firebase'e kaydet
-  db.collection("cekilis_sonuclari").doc(user).set({
-    isim: user,
-    hediyeVerdigi: match,
-    zaman: Date.now()
-  });
-
-  result.innerHTML = `Bu yıl hediye vereceğin kişi:<br><br>🎁 <b>${match}</b> 🎁`;
-}
-
-
-// --------------------------------------------------------
-// 5) ADMİN RESET (Şifre: 258963)
-// --------------------------------------------------------
-function adminReset() {
-  const pass = prompt("Admin şifresi:");
-
-  if (pass !== "258963") {
-    alert("Hatalı şifre!");
-    return;
-  }
-
-  localStorage.removeItem("MATCH_TABLE");
-  localStorage.removeItem("LOCKED_USER");
-
-  alert("Tüm eşleşmeler sıfırlandı.");
-  location.reload();
-}
-</script>
-
-</body>
-</html>
+firebase.initializeApp(firebaseConf
     
   </body>
   
