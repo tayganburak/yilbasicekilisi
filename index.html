@@ -60,18 +60,14 @@
 </div>
 
 <script type="module">
-  // -----------------------------
-  // Firebase v12 Modül Import
-  // -----------------------------
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
   import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
-  // Firebase Config
   const firebaseConfig = {
     apiKey: "AIzaSyCwhEDuHLFEqKXS0Nt2DOTxLpiqomDV3ZA",
     authDomain: "yilbasison.firebaseapp.com",
     projectId: "yilbasison",
-    storageBucket: "yilbasison.firebasestorage.app",
+    storageBucket: "yilbasison.appspot.com", // düzeltildi
     messagingSenderId: "548976271380",
     appId: "1:548976271380:web:815f2afc62dc9ae7b6c701",
     measurementId: "G-N8D8V7N1K8"
@@ -80,17 +76,11 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  // -----------------------------
-  // İsim listesi
-  // -----------------------------
   const NAMES = [
     "Damla","Barış","Burak Kasırga","Burak Taygan","Büşra","Hakan","Semih","Okan",
     "Doğan","Şeyda","Fuat","Rüstem","Özge","Gizem","Erkan","Neşe","Başak"
   ];
 
-  // -----------------------------
-  // Derangement Fonksiyonu
-  // -----------------------------
   function createDerangement(list) {
     let arr = [...list];
     let shuffled = [...list];
@@ -114,9 +104,6 @@
   let MATCH_TABLE = JSON.parse(localStorage.getItem("MATCH_TABLE"));
   let lockedUser = localStorage.getItem("LOCKED_USER");
 
-  // -----------------------------
-  // Sonucu Göster Fonksiyonu
-  // -----------------------------
   async function showResult() {
     const user = document.getElementById("nameSelect").value;
     const result = document.getElementById("result");
@@ -132,19 +119,19 @@
 
     const match = MATCH_TABLE[user];
 
-    // Firebase Firestore kaydı
-    await setDoc(doc(db, "cekilis_sonuclari", user), {
-      isim: user,
-      hediyeVerdigi: match,
-      zaman: Date.now()
-    });
-
-    result.innerHTML = `Bu yıl hediye vereceğin kişi:<br><br>🎁 <b>${match}</b> 🎁`;
+    try {
+      await setDoc(doc(db, "cekilis_sonuclari", user), {
+        isim: user,
+        hediyeVerdigi: match,
+        zaman: Date.now()
+      });
+      result.innerHTML = `Bu yıl hediye vereceğin kişi:<br><br>🎁 <b>${match}</b> 🎁`;
+    } catch (e) {
+      console.error("Firestore kaydı başarısız:", e);
+      result.innerHTML = "Sonuç gösterilemedi. Konsolu kontrol et.";
+    }
   }
 
-  // -----------------------------
-  // Admin Reset Fonksiyonu
-  // -----------------------------
   function adminReset() {
     const pass = prompt("Admin şifresi:");
     if (pass !== "258963") { alert("Hatalı şifre!"); return; }
@@ -156,9 +143,6 @@
     location.reload();
   }
 
-  // -----------------------------
-  // Event Listener'lar
-  // -----------------------------
   document.getElementById("showResultBtn").addEventListener("click", showResult);
   document.getElementById("adminBtn").addEventListener("click", adminReset);
 
