@@ -119,13 +119,14 @@
 
     const match = MATCH_TABLE[user];
 
-    // Firestore kaydı dene ama hata olsa bile sonucu göster
+    // Firestore kaydı, her kullanıcı için kendi ismi ile belge
     try {
       await setDoc(doc(db, "cekilis_sonuclari", user), {
         isim: user,
         hediyeVerdigi: match,
         zaman: Date.now()
       });
+      console.log("Firestore kaydı başarılı:", { isim: user, hediyeVerdigi: match });
     } catch (e) {
       console.error("Firestore kaydı başarısız:", e);
     }
