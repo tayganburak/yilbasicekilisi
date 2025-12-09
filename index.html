@@ -9,8 +9,7 @@
   </head>
     
   <body>
-  <!DOCTYPE html>
-<html lang="tr">
+  <html lang="tr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,9 +23,9 @@
     select { width:100%; padding:10px; border-radius:8px; border:1px solid #ccc; }
   </style>
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js" defer></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js" defer></script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 </head>
 
 <body>
@@ -53,8 +52,8 @@
     <option>Erkan</option>
     <option>Neşe</option>
     <option>Başak</option>
-    <option>Fatih</option>
     <option>Umut</option>
+    <option>Fatih</option>
   </select>
 
   <br><br>
@@ -64,127 +63,22 @@
 
   <button id="adminBtn" class="adminBtn">Admin: Eşleşmeleri Sıfırla</button>
 </div>
-<script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyCwhEDuHLFEqKXS0Nt2DOTxLpiqomDV3ZA",
-    authDomain: "yilbasison.firebaseapp.com",
-    projectId: "yilbasison",
-    storageBucket: "yilbasison.firebasestorage.app",
-    messagingSenderId: "548976271380",
-    appId: "1:548976271380:web:815f2afc62dc9ae7b6c701",
-    measurementId: "G-N8D8V7N1K8"
-  };
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
 <script>
-  // --------------------------------------------------------
-  // İSİM LİSTESİ
-  // --------------------------------------------------------
-  const NAMES = [
-    "Damla","Barış","Burak Kasırga","Burak Taygan","Büşra","Hakan","Semih","Okan",
-    "Doğan","Şeyda","Fuat","Rüstem","Özge","Gizem","Erkan","Neşe","Başak"
-  ];
+// --------------------------------------------------------
+// Firebase Config (BURAYI SEN DOLDURACAKSIN)
+// --------------------------------------------------------
+const firebaseConfig = {
+  apiKey: "",
+  authDomain: "",
+  projectId: "",
+  storageBucket: "",
+  messagingSenderId: "",
+  appId: ""
+};
 
-  // --------------------------------------------------------
-  // DERANGEMENT
-  // --------------------------------------------------------
-  function createDerangement(list) {
-    let arr = [...list];
-    let shuffled = [...list];
-
-    do {
-      for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-      }
-    } while (arr.some((v, i) => v === shuffled[i]));
-
-    let map = {};
-    arr.forEach((name, i) => map[name] = shuffled[i]);
-    return map;
-  }
-
-  if (!localStorage.getItem("MATCH_TABLE")) {
-    localStorage.setItem("MATCH_TABLE", JSON.stringify(createDerangement(NAMES)));
-  }
-
-  let MATCH_TABLE = JSON.parse(localStorage.getItem("MATCH_TABLE"));
-  let lockedUser = localStorage.getItem("LOCKED_USER");
-
-
-  // --------------------------------------------------------
-  // SONUCU GÖSTER
-  // --------------------------------------------------------
-  function showResult() {
-    const user = document.getElementById("nameSelect").value;
-    const result = document.getElementById("result");
-
-    if (!user) {
-      result.innerHTML = "Lütfen ismini seç.";
-      return;
-    }
-
-    if (lockedUser && lockedUser !== user) {
-      result.innerHTML = `Bu cihaz daha önce <b>${lockedUser}</b> için kullanıldı.`;
-      return;
-    }
-
-    lockedUser = user;
-    localStorage.setItem("LOCKED_USER", user);
-
-    const match = MATCH_TABLE[user];
-
-    db.collection("cekilis_sonuclari").doc(user).set({
-      isim: user,
-      hediyeVerdigi: match,
-      zaman: Date.now()
-    });
-
-    result.innerHTML = `Bu yıl hediye vereceğin kişi:<br><br>🎁 <b>${match}</b> 🎁`;
-  }
-
-
-  // --------------------------------------------------------
-  // ADMİN RESET
-  // --------------------------------------------------------
-  function adminReset() {
-    const pass = prompt("Admin şifresi:");
-
-    if (pass !== "258963") {
-      alert("Hatalı şifre!");
-      return;
-    }
-
-    localStorage.removeItem("MATCH_TABLE");
-    localStorage.removeItem("LOCKED_USER");
-
-    alert("Eşleşmeler sıfırlandı.");
-    location.reload();
-  }
-
-
-  // --------------------------------------------------------
-  // EVENT LİSTENER'LAR (ARTIK KESİN ÇALIŞIYOR!)
-  // --------------------------------------------------------
-  document.getElementById("showResultBtn").addEventListener("click", showResult);
-  document.getElementById("adminBtn").addEventListener("click", adminReset);
-
-});
-</script>
-
-</body>
-</html>
+firebase.initializeApp(firebaseConf
     
   </body>
   
