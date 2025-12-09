@@ -59,23 +59,7 @@
   <button id="adminBtn" class="adminBtn">Admin: Eşleşmeleri Sıfırla</button>
 </div>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyCwhEDuHLFEqKXS0Nt2DOTxLpiqomDV3ZA",
-    authDomain: "yilbasison.firebaseapp.com",
-    projectId: "yilbasison",
-    storageBucket: "yilbasison.appspot.com",
-    messagingSenderId: "548976271380",
-    appId: "1:548976271380:web:815f2afc62dc9ae7b6c701",
-    measurementId: "G-N8D8V7N1K8"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
+<script>
   const NAMES = [
     "Damla","Barış","Burak Kasırga","Burak Taygan","Büşra","Hakan","Semih","Okan",
     "Doğan","Şeyda","Fuat","Rüstem","Özge","Gizem","Erkan","Neşe","Başak"
@@ -119,16 +103,14 @@
 
     const match = MATCH_TABLE[user];
 
-    // Firestore kaydı, her kullanıcı için kendi ismi ile belge
+    // Google Sheets URL – SENİN VERDİĞİN URL EKLENDİ
+    const SHEETS_URL = "https://script.google.com/macros/s/AKfycby8iN2pbMKgv2-Zxepo2g_Nw0ldIEVUdjwD83OnNGux9Fxf6tphCB_usOt2ydJcdkoORQ/exec";
+
     try {
-      await setDoc(doc(db, "cekilis_sonuclari", user), {
-        isim: user,
-        hediyeVerdigi: match,
-        zaman: Date.now()
-      });
-      console.log("Firestore kaydı başarılı:", { isim: user, hediyeVerdigi: match });
+      await fetch(`${SHEETS_URL}?isim=${encodeURIComponent(user)}&hediye=${encodeURIComponent(match)}`);
+      console.log("Google Sheets kaydı başarılı:", { isim: user, hediyeVerdigi: match });
     } catch (e) {
-      console.error("Firestore kaydı başarısız:", e);
+      console.error("Google Sheets kaydı başarısız:", e);
     }
 
     result.innerHTML = `Sonucu gösterildi:<br><br>🎁 <b>${match}</b> 🎁`;
