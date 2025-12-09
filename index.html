@@ -49,6 +49,8 @@
     <option>Erkan</option>
     <option>Neşe</option>
     <option>Başak</option>
+    <option>Umut</option>
+    <option>Fatih</option>
   </select>
 
   <br><br>
@@ -60,11 +62,14 @@
 </div>
 
 <script>
+  // --- İSİM LİSTESİ ---
   const NAMES = [
     "Damla","Barış","Burak Kasırga","Burak Taygan","Büşra","Hakan","Semih","Okan",
-    "Doğan","Şeyda","Fuat","Rüstem","Özge","Gizem","Erkan","Neşe","Başak"
+    "Doğan","Şeyda","Fuat","Rüstem","Özge","Gizem","Erkan","Neşe","Başak",
+    "Umut","Fatih"
   ];
 
+  // --- DERANGEMENT (kimse kendini çekmesin) ---
   function createDerangement(list) {
     let arr = [...list];
     let shuffled = [...list];
@@ -81,56 +86,91 @@
     return map;
   }
 
+  // Eşleşme tablosu yoksa oluştur
   if (!localStorage.getItem("MATCH_TABLE")) {
     localStorage.setItem("MATCH_TABLE", JSON.stringify(createDerangement(NAMES)));
   }
 
   let MATCH_TABLE = JSON.parse(localStorage.getItem("MATCH_TABLE"));
+
+  // UNIQ kontrol için kullanılan sonuçlar
+  if (!localStorage.getItem("USED_RESULTS")) {
+    localStorage.setItem("USED_RESULTS", JSON.stringify({}));
+  }
+
+  let USED_RESULTS = JSON.parse(localStorage.getItem("USED_RESULTS"));
+
+  // Cihaz kilidi
   let lockedUser = localStorage.getItem("LOCKED_USER");
 
+  // --- SONUCU GÖSTERME FONKSİYONU ---
   async function showResult() {
     const user = document.getElementById("nameSelect").value;
     const result = document.getElementById("result");
 
-    if (!user) { result.innerHTML = "Lütfen ismini seç."; return; }
-    if (lockedUser && lockedUser !== user) {
-      result.innerHTML = `Bu cihaz daha önce <b>${lockedUser}</b> için kullanıldı.`; 
+    if (!user) {
+      result.innerHTML = "Lütfen ismini seç.";
       return;
     }
 
-    lockedUser = user;
-    localStorage.setItem("LOCKED_USER", user);
+    // Cihaz kilitli ise engelle
+    if (lockedUser && lockedUser !== user) {
+      result.innerHTML = `Bu cihaz daha önce <b>${lockedUser}</b> için sonuç gösterdi.`;
+      return;
+    }
 
     const match = MATCH_TABLE[user];
 
-    // Google Sheets URL – SENİN VERDİĞİN URL EKLENDİ
-    const SHEETS_URL = "https://script.google.com/macros/s/AKfycby8iN2pbMKgv2-Zxepo2g_Nw0ldIEVUdjwD83OnNGux9Fxf6tphCB_usOt2ydJcdkoORQ/exec";
-
-    try {
-      await fetch(`${SHEETS_URL}?isim=${encodeURIComponent(user)}&hediye=${encodeURIComponent(match)}`);
-      console.log("Google Sheets kaydı başarılı:", { isim: user, hediyeVerdigi: match });
-    } catch (e) {
-      console.error("Google Sheets kaydı başarısız:", e);
+    // UNIQ kontrol
+    if (USED_RESULTS[match] && USED_RESULTS[match] !== user) {
+      result.innerHTML = `
+        <b>Bu isim başka biri tarafından zaten çekildi.</b><br>
+        Admin sıfırlama yapana kadar işlem yapılamaz.
+      `;
+      return;
     }
 
-    result.innerHTML = `Sonucu gösterildi:<br><br>🎁 <b>${match}</b> 🎁`;
+    // Bu cihaz artık bu kullanıcıya kitlendi
+    lockedUser = user;
+    localStorage.setItem("LOCKED_USER", user);
+
+    // Sonucu kullanılanlar listesine ekle
+    USED_RESULTS[match] = user;
+    localStorage.setItem("USED_RESULTS", JSON.stringify(USED_RESULTS));
+
+    // --- KULLANICIYA ANINDA GÖSTER (GEÇİKME YOK) ---
+    result.innerHTML = `🎁 <b>${match}</b> 🎁`;
+
+    // --- GOOGLE SHEETS KAYDI ARKA PLANDA ÇALIŞSIN ---
+    const SHEETS_URL =
+      "https://script.google.com/macros/s/AKfycby8iN2pbMKgv2-Zxepo2g_Nw0ldIEVUdjwD83OnNGux9Fxf6tphCB_usOt2ydJcdkoORQ/exec";
+
+    fetch(`${SHEETS_URL}?isim=${encodeURIComponent(user)}&hediye=${encodeURIComponent(match)}`)
+      .then(() => console.log("Sheets kaydı tamam"))
+      .catch(err => console.error("Sheets kaydı hata:", err));
   }
 
+  // --- ADMIN RESET ---
   function adminReset() {
     const pass = prompt("Admin şifresi:");
-    if (pass !== "258963") { alert("Hatalı şifre!"); return; }
+    if (pass !== "258963") {
+      alert("Hatalı şifre!");
+      return;
+    }
 
     localStorage.removeItem("MATCH_TABLE");
     localStorage.removeItem("LOCKED_USER");
+    localStorage.removeItem("USED_RESULTS");
 
     alert("Eşleşmeler sıfırlandı.");
     location.reload();
   }
 
+  // Buton dinleyicileri
   document.getElementById("showResultBtn").addEventListener("click", showResult);
   document.getElementById("adminBtn").addEventListener("click", adminReset);
-
 </script>
+
 </body>
 </html>
     
