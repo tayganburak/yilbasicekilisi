@@ -1,15 +1,4 @@
 <!DOCTYPE html>
-<html lang="en">
-
-  <head>
-    <meta charset="UTF-8">
-    <title>Untitled</title>
-    
-
-  </head>
-    
-  <body>
-  <!DOCTYPE html>
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
@@ -18,7 +7,8 @@
   <style>
     body { font-family: Arial; background:#f2f2f2; display:flex; justify-content:center; padding:40px;}
     .box { background:white; padding:20px; border-radius:12px; width:360px; text-align:center; box-shadow:0 0 10px rgba(0,0,0,.1);}
-    button { padding:10px 18px; border:none; border-radius:10px; background:#40916c; color:white; cursor:pointer;}
+    button { padding:10px 18px; border:none; border-radius:10px; background:#40916c; color:white; cursor:pointer; }
+    .adminBtn { background:#6c757d; margin-top:18px; }
     #result { margin-top:20px; font-size:1.2rem; font-weight:bold; }
     select { width:100%; padding:10px; border-radius:8px; border:1px solid #ccc; }
   </style>
@@ -27,35 +17,36 @@
 
 <div class="box">
 <h2>Yılbaşı Çekilişi</h2>
-<p>İsmini seç ve eşleşmeni gör</p>
+<p>İsmini seç ve eşleşmeni gör. Herkes 1 kişiye hediye verir ve 1 kişiden hediye alır.</p>
 
 <select id="nameSelect">
   <option value="">İsmini seç</option>
-  <option>Damla Aksu</option>
-  <option>Barış Özatav</option>
+  <option>Damla</option>
+  <option>Barış</option>
   <option>Burak Kasırga</option>
   <option>Burak Taygan</option>
-  <option>Büşra Tuğmen</option>
-  <option>Hakan Çırpanlı</option>
-  <option>Semih Acar</option>
-  <option>Okan Doğan</option>
-  <option>Doğan Koç</option>
-  <option>Şeyda Gencer</option>
-  <option>Fuatcan Göral</option>
-  <option>Rüstem Öztürk</option>
-  <option>Özge Çamdeviren</option>
-  <option>Gizem Demirer</option>
-  <option>Erkan Çam</option>
-  <option>Neşe Tek</option>
-  <option>Başak Narsap</option>
-  <option>Umut Yalçınkaya</option>
-  <option>Fatih Duman</option>
+  <option>Büşra</option>
+  <option>Hakan</option>
+  <option>Semih</option>
+  <option>Okan</option>
+  <option>Doğan</option>
+  <option>Şeyda</option>
+  <option>Fuat</option>
+  <option>Rüstem</option>
+  <option>Özge</option>
+  <option>Gizem</option>
+  <option>Erkan</option>
+  <option>Neşe</option>
+  <option>Başak</option>
 </select>
 
 <br/><br/>
 <button onclick="showResult()">Sonucu Göster</button>
 
 <div id="result"></div>
+
+<button class="adminBtn" onclick="adminReset()">Admin: Eşleşmeleri Sıfırla</button>
+
 </div>
 
 <script>
@@ -64,25 +55,22 @@ const NAMES = [
   "Doğan","Şeyda","Fuat","Rüstem","Özge","Gizem","Erkan","Neşe","Başak"
 ];
 
-// Derangement fonksiyonu: kimse kendine çıkmaz, herkes 1-1 eşleşir
+// Derangement fonksiyonu
 function createDerangement(list) {
   let arr = [...list];
   let d = [...list];
 
-  // Shuffle
   for (let i = d.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [d[i], d[j]] = [d[j], d[i]];
   }
 
-  // Eğer biri kendine çıkarsa yeniden üret
   for (let i = 0; i < arr.length; i++) {
     if (arr[i] === d[i]) {
       return createDerangement(list);
     }
   }
 
-  // Eşleşme tablosu oluştur
   let map = {};
   for (let i = 0; i < arr.length; i++) {
     map[arr[i]] = d[i];
@@ -90,7 +78,6 @@ function createDerangement(list) {
   return map;
 }
 
-// Eşleşme tablosu daha önce oluşturulmamışsa oluştur
 if (!localStorage.getItem("MATCH_TABLE")) {
   const table = createDerangement(NAMES);
   localStorage.setItem("MATCH_TABLE", JSON.stringify(table));
@@ -99,7 +86,6 @@ if (!localStorage.getItem("MATCH_TABLE")) {
 let lockedUser = localStorage.getItem("LOCKED_USER") || null;
 const table = JSON.parse(localStorage.getItem("MATCH_TABLE"));
 
-// Sonucu Göster
 function showResult() {
   const user = document.getElementById("nameSelect").value;
   const resultDiv = document.getElementById("result");
@@ -109,10 +95,8 @@ function showResult() {
     return;
   }
 
-  // Cihaz başka kullanıcıya kilitlendiyse
   if (lockedUser && lockedUser !== user) {
-    resultDiv.innerHTML =
-      "Bu cihaz daha önce <b>" + lockedUser + "</b> için kilitlenmiş.";
+    resultDiv.innerHTML = "Bu cihaz daha önce <b>" + lockedUser + "</b> için kilitlendi.";
     return;
   }
 
@@ -125,11 +109,21 @@ function showResult() {
     "Bu yıl hediye vereceğin kişi:<br><br> 🎁 <b>" + match + "</b> 🎁";
 }
 
+function adminReset() {
+  const pass = prompt("Admin şifresini girin:");
+
+  if (pass !== "258963") {
+    alert("Hatalı şifre!");
+    return;
+  }
+
+  localStorage.removeItem("MATCH_TABLE");
+  localStorage.removeItem("LOCKED_USER");
+
+  alert("Tüm eşleşmeler sıfırlandı.");
+  location.reload();
+}
 </script>
 
 </body>
-</html>
-    
-  </body>
-  
 </html>
